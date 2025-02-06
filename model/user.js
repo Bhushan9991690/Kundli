@@ -35,7 +35,6 @@ schema.methods.checkPassword = async function (passwordByUser) {
 };
 schema.methods.getJwt = async function () {
   try {
-    console.log("start");
     const user = this;
     const token = await jwt.sign({ _id: user._id }, process.env.key, {
       expiresIn: "7d",
