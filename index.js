@@ -2,7 +2,12 @@ const express = require("express");
 require("dotenv").config();
 const connectDB = require("./config/database");
 const app = express();
-const PORT=process.env.port;
+const PORT = process.env.port;
+const authRouter = require("./router/auth");
+
+app.use(express.json());
+app.use("/", authRouter);
+
 connectDB()
   .then(() => {
     console.log("Conneted successfully to DB");
