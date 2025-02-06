@@ -4,15 +4,15 @@ const useAuth = async (req, res, next) => {
   try {
     const Token = req.cookies.Token;
     if (!Token) {
-      return res.status(400).send("InValid token");
+      return res.status(400).json({ message: "InValid token" });
     }
     const verifyToken = await jwt.verify(Token, process.env.key);
     if (!verifyToken) {
-      return res.status(400).send("Invalid credentails");
+      return res.status(400).json({ message: "Invalid credentails" });
     }
     const user = await User.findOne({ _id: verifyToken._id });
     if (!user) {
-      return res.status(400).send("Invalid User");
+      return res.status(400).json({ message: "Invalid User" });
     }
     const plainUser = user.toObject();
     delete plainUser.password;
@@ -20,7 +20,7 @@ const useAuth = async (req, res, next) => {
     req.user = plainUser;
     next();
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).json({ message: error });
   }
 };
 module.exports = useAuth;
