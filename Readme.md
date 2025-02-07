@@ -10,3 +10,11 @@ This allows your server to easily retrieve and work with cookies
 
 1. const plainUser = user.toObject(); // Convert Mongoose document to plain object
 2. delete plainUser.password; // Now this will work
+
+# To remember the time we use
+
+1. {timestamps:true} in schema
+
+# Joi validation
+
+Joi validates the request body, not the database-stored data.

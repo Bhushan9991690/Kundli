@@ -1,19 +1,23 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const schema = new mongoose.Schema({
-  name: { type: String, required: true, minLength: 4, maxlength: 20 },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
+const schema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    password: { type: String, required: true, trim: true },
+    phone: {
+      type: Number,
+      required: true,
+    },
   },
-  password: { type: String, required: true },
-  phone: {
-    type: Number,
-    required: true,
-  },
-});
+  { timestamps: true }
+);
 
 schema.pre("save", async function (next) {
   try {
@@ -29,7 +33,9 @@ schema.pre("save", async function (next) {
   }
 });
 schema.methods.checkPassword = async function (passwordByUser) {
+  console.log(this, "PP");
   let user = this;
+
   const check = await bcrypt.compare(passwordByUser, user.password);
   return check;
 };

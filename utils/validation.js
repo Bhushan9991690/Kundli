@@ -1,4 +1,17 @@
 const joi = require("joi");
+
+const passwordSchema = joi
+  .string()
+  .min(8)
+  .pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$/)
+  .required()
+  .messages({
+    "string.min": "password must be atleast 8 characters",
+    "string.pattern.base":
+      "Password must contain at least one uppercase letter, one lowercase letter, and one number.",
+    "any.required": "Password is required",
+  });
+
 const signupValidationSchema = joi.object({
   name: joi.string().min(4).max(20).required().messages({
     "string.base": "username should be a type of text",
@@ -11,17 +24,7 @@ const signupValidationSchema = joi.object({
     "string.email": "Email must be a valid email address",
     "any.required": "Email is required",
   }),
-  password: joi
-    .string()
-    .min(8)
-    .pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$/)
-    .required()
-    .messages({
-      "string.min": "password must be atleast 8 characters",
-      "string.pattern.base":
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number.",
-      "any.required": "Password is required",
-    }),
+  password: passwordSchema,
   phone: joi
     .string()
     .pattern(/^[0-9]{10}$/)
@@ -31,9 +34,27 @@ const signupValidationSchema = joi.object({
       "any.required": "Phone number is required",
     }),
 });
-const loginValidationSchema = signupValidationSchema
-  .fork(["name", "phone"], (schema) => {
+const loginValidationSchema = signupValidationSchema.fork(
+  ["name", "phone"],
+  (schema) => {
     return schema.optional();
-  })
-  
-module.exports = { signupValidationSchema, loginValidationSchema };
+  }
+);
+const profileValidation = signupValidationSchema.fork(
+  ["password"],
+  (schema) => {
+    return schema.optional();
+  }
+);
+
+const passwordValidation = joi.object({
+  oldPassword: passwordSchema,
+  newPassword: passwordSchema,
+});
+
+module.exports = {
+  signupValidationSchema,
+  loginValidationSchema,
+  profileValidation,
+  passwordValidation,
+};
