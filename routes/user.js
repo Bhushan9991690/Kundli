@@ -12,8 +12,7 @@ userRouter.get("/user/request/recieved", useAuth, async (req, res) => {
     const requestRecieve = await Connection.find({
       status: "interested",
       toUserId: user._id,
-    }).populate("fromUserId", "name");
-    // populate('fromUserId',"name phone");
+    }).populate("fromUserId", "firstName lastName photoURL");
 
     if (requestRecieve.length === 0) {
       return res.status(400).json({ message: "No request Found" });
@@ -31,10 +30,10 @@ userRouter.get("/user/connections", useAuth, async (req, res) => {
       status: "accepted",
       $or: [{ fromUserId: user._id }, { toUserId: user._id }],
     })
-      .populate("fromUserId", "name")
-      .populate("toUserId", "name");
+      .populate("fromUserId", "firstName lastName age gender ")
+      .populate("toUserId", "firstName lastName age gender ");
     if (connections.length === 0) {
-      return res.status(400).json({ message: "No Connections Found" });
+      return res.status(200).json({ message: "No Connections Found" });
     }
     const data = connections.map((c, i) => {
       if (c.fromUserId._id.equals(user._id)) {
@@ -52,13 +51,15 @@ userRouter.get("/user/connections", useAuth, async (req, res) => {
 userRouter.get("/feed", useAuth, async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    let limit = parseInt(req.query.limit) || 10;
     const skips = (page - 1) * limit;
 
     // Restrict to only atleast 50 User one time only
+
     limit = limit > 50 ? 50 : limit;
 
     const loggInUser = req.user._id;
+
     const UserConnect = await Connection.find({
       $or: [
         { fromUserId: loggInUser },
@@ -76,7 +77,7 @@ userRouter.get("/feed", useAuth, async (req, res) => {
     const feedProvide = await User.find({
       $and: [{ _id: { $ne: loggInUser } }, { _id: { $nin: Array.from(hide) } }],
     })
-      .select("name")
+      .select("firstName lastName photoURL email phone about gender")
       .skip(skips)
       .limit(limit);
 

@@ -14,12 +14,15 @@ authRouter.post("/auth/signup", async (req, res) => {
     const isDuplicateEmail = await User.findOne({ email: req.body.email });
     if (isDuplicateEmail) {
       return res
-        .status(200)
+        .status(400)
         .json({ message: "Email is already present in DB" });
     }
     const user = new User(req.body);
-    await user.save();
-    res.json({ message: "Sign up successfully" });
+
+    const userData = await user.save();
+    const token = await userData.getJwt();
+    res.cookie("Token", token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
+    res.json({ message: "Sign up successfully", data: userData });
   } catch (error) {
     res.status(400).json({ message: error });
   }
@@ -42,7 +45,7 @@ authRouter.post("/auth/login", async (req, res) => {
     }
     const token = await userData.getJwt();
     res.cookie("Token", token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
-    res.status(200).json({ message: "login successfully" });
+    res.status(200).json({ message: "login successfully", userData });
   } catch (error) {
     res.status(400).json({ message: error });
   }

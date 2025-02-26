@@ -42,8 +42,6 @@ requestRouter.post(
           { fromUserId: toUserId, toUserId: fromUserId },
         ],
       });
-      console.log(existingRequest);
-
       if (existingRequest) {
         return res.status(400).json({ message: "Alreday send a request" });
       }
@@ -53,7 +51,6 @@ requestRouter.post(
         status,
       });
       const f = await request.save();
-      console.log(f);
 
       res.status(200).json({ message: "Request send successfully" });
     } catch (error) {
@@ -86,10 +83,8 @@ requestRouter.post(
       }
       findRequest.status = status;
       const data = await findRequest.save();
-      
-      console.log("g", data);
 
-      res.status(400).json({ message: "connection request", status, data });
+      res.status(200).json({ message: "Request accepted", status, data });
     } catch (error) {
       res.status(400).json({ message: error });
     }

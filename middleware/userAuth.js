@@ -14,8 +14,6 @@ const useAuth = async (req, res, next) => {
     if (!user) {
       return res.status(400).json({ message: "Invalid User" });
     }
-    // const plainUser = user.toObject();
-    // delete plainUser.password;
 
     req.user = user;
     next();
