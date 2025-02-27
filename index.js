@@ -15,7 +15,7 @@ const userRouter = require("./routes/user");
 
 app.use(
   cors({
-    origin: "http://13.50.16.158",
+    origin: "*", //http://13.50.16.158
     optionsSuccessStatus: 200,
     credentials: true,
   })
