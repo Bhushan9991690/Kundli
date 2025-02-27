@@ -6,7 +6,7 @@ const cors = require("cors");
 const app = express();
 // const PORT = process.env.port;
 
-const PORT=3000
+const PORT = 3000;
 
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
@@ -15,7 +15,7 @@ const userRouter = require("./routes/user");
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "http://13.50.16.158",
     optionsSuccessStatus: 200,
     credentials: true,
   })
