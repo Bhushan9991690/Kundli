@@ -63,7 +63,7 @@ schema.methods.checkPassword = async function (passwordByUser) {
 schema.methods.getJwt = async function () {
   try {
     const user = this;
-    const token = await jwt.sign({ _id: user._id }, process.env.key, {
+    const token = await jwt.sign({ _id: user._id }, "Nodejs2025", {  
       expiresIn: "7d",
     });
     return token;
