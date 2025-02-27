@@ -47,7 +47,7 @@ authRouter.post("/auth/login", async (req, res) => {
     res.cookie("Token", token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
     res.status(200).json({ message: "login successfully", userData });
   } catch (error) {
-    res.status(400).json({ message: error });
+    res.status(401).json({ message: error, Error: "Pata nii" });
   }
 });
 authRouter.post("/auth/logout", (req, res) => {

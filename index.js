@@ -13,13 +13,7 @@ const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
 
-app.use(
-  cors({
-    origin: "*", //http://13.50.16.158
-    optionsSuccessStatus: 200,
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use("/", authRouter);
