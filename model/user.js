@@ -21,7 +21,7 @@ const schema = new mongoose.Schema(
       type: String,
       default: url,
     },
-    skills: { type: [String], },
+    skills: { type: [String] },
     about: {
       type: String,
       default: "This is a User profile",
@@ -63,7 +63,7 @@ schema.methods.checkPassword = async function (passwordByUser) {
 schema.methods.getJwt = async function () {
   try {
     const user = this;
-    const token = await jwt.sign({ _id: user._id }, "Nodejs2025", {  
+    const token = await jwt.sign({ _id: user._id }, process.env.KEY, {
       expiresIn: "7d",
     });
     return token;
