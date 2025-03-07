@@ -11,6 +11,7 @@ const profileRouter = express();
 profileRouter.get("/profile/view", useAuth, async (req, res) => {
   try {
     const {
+      _id,
       email,
       firstName,
       lastName,
@@ -23,6 +24,7 @@ profileRouter.get("/profile/view", useAuth, async (req, res) => {
     } = req.user;
 
     res.status(200).json({
+      _id,
       email,
       firstName,
       lastName,
