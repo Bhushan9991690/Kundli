@@ -12,7 +12,7 @@ const hash = ({ userId, targetUserId }) => {
 
 const initalizeSocket = (server) => {
   const io = new socket.Server(server, {
-    cors: { origin: "http://localhost:5173", methods: ["GET", "POST"] },
+    cors: { origin: "*", methods: ["GET", "POST"] }, //http://localhost:5173
   });
   io.on("connection", (socket) => {
     console.log("New user login");
@@ -26,16 +26,16 @@ const initalizeSocket = (server) => {
       "sendMessage",
       async ({ userId, targetUserId, message, firstName }) => {
         try {
-          // const validIdentity = await Connection.findOne({
-          //   $or: [
-          //     { fromUserId: userId, toUserId: targetUserId },
-          //     { fromUserId: targetUserId, toUserId: userId },
-          //   ],
-          //   status: "accepted",
-          // });
-          // if (!validIdentity) {
-          //   return;
-          // }
+          const validIdentity = await Connection.findOne({
+            $or: [
+              { fromUserId: userId, toUserId: targetUserId },
+              { fromUserId: targetUserId, toUserId: userId },
+            ],
+            status: "accepted",
+          });
+          if (!validIdentity) {
+            return;
+          }
 
           const roomId = hash(userId, targetUserId);
           let chat = await Chat.findOne({
